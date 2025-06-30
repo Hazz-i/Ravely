@@ -2,14 +2,14 @@ import { Button } from '../ui/button';
 
 const Header = () => {
 	return (
-		<header className='py-6'>
+		<header className='py-6 top-0 left-0 right-0 bg-white z-50'>
 			<div className='container mx-auto flex justify-between items-center'>
 				<span className='flex items-center gap-50 w-1/3 justify-center'>
 					<h1 className='text-2xl font-bold'>
 						Rave<span className='text-[#FFA03F]'>ly</span>
 					</h1>
 					<nav>
-						<ul className='flex items-center gap-6 text-lg'>
+						<ul className='flex items-center gap-10 font-semibold text-gray-700'>
 							<li>
 								<a href='/' className='hover:underline'>
 									Home
