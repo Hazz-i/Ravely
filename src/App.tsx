@@ -2,6 +2,7 @@ import Header from './components/layouts/Header';
 import Carousel from './components/Carousel';
 import { Input } from './components/ui/input';
 import { Button } from './components/ui/button';
+import Footer from './components/layouts/Footer';
 
 function App() {
 	return (
@@ -105,7 +106,7 @@ function App() {
 						</div>
 						<div className='absolute flex items-center justify-center gap-5 -bottom-15 -right-5 backdrop-blur-lg px-5 py-3 rounded-2xl shadow-lg bg-black/20'>
 							<span className='text-[#FFA03F] bg-white p-2 rounded-full cursor-pointer transition duration-300 items-center flex justify-center'>
-								<i className='bxr bx-search text-3xl'></i>
+								<i className='bxr bx-book text-3xl'></i>
 							</span>
 							<h1 className='text-white font-semibold text-sm'>
 								Profesional <br />
@@ -138,8 +139,8 @@ function App() {
 						</span>
 
 						<span className='flex items-center justify-between gap-5'>
-							<button className='bg-[#FFA03F] text-white p-2 rounded-lg cursor-pointer transition duration-300 items-center flex justify-center'>
-								<i className='bxr bx-search text-3xl'></i>
+							<button className='text-[#FFA03F] bg-white p-2 rounded-lg cursor-pointer transition duration-300 items-center flex justify-center shadow-sm'>
+								<i className='bxr bx-calendar-week text-3xl'></i>
 							</button>
 							<span className='text-lg grid'>
 								<p className='font-semibold'>Best Price Guarantee</p>
@@ -253,7 +254,7 @@ function App() {
 					<div className='relative h-[40rem] w-[30rem] bg-[#EBEBEB] rounded-3xl'>
 						<div className='h-[40rem] w-[30rem] rounded-3xl overflow-hidden absolute -right-7 top-7'>
 							<img
-								src='https://i.pinimg.com/736x/14/95/16/14951623665d09790a7ed2d4d9d887b2.jpg'
+								src='https://i.pinimg.com/736x/92/24/c7/9224c73f577d398b338fd8e0ab03c91a.jpg'
 								alt=''
 								className='w-full h-full object-cover'
 							/>
@@ -382,6 +383,8 @@ function App() {
 				{/* PESAWAT END */}
 			</section>
 			{/* END RECOMMENDATION DESTINATION */}
+
+			<Footer />
 		</div>
 	);
 }
