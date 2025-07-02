@@ -1,10 +1,97 @@
+import { useState } from 'react';
 import Header from './components/layouts/Header';
 import Carousel from './components/Carousel';
 import { Input } from './components/ui/input';
 import { Button } from './components/ui/button';
 import Footer from './components/layouts/Footer';
+import DestinationResults from './components/DestinationResults';
+import { filterDestinations, type Destination } from './data/destinations';
 
 function App() {
+	const [searchQuery, setSearchQuery] = useState('');
+	const [searchResults, setSearchResults] = useState<Destination[]>([]);
+	const [showResults, setShowResults] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
+
+	const handleSearch = async () => {
+		if (searchQuery.trim()) {
+			setIsLoading(true);
+			try {
+				// Array of image URLs from the project
+				const imageUrls = [
+					'https://images.unsplash.com/photo-1491555103944-7c647fd857e6?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+					'https://images.unsplash.com/photo-1448518184296-a22facb4446f?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+					'https://images.unsplash.com/photo-1553913861-dc2ce76b856c?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+					'https://images.unsplash.com/photo-1518684079-3c830dcef090?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+					'https://images.unsplash.com/photo-1531141445733-14c2eb7d4c1f?q=80&w=1965&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+					'https://i.pinimg.com/736x/cd/fc/7d/cdfc7df29fb2a2590c915b2f48ba3e7b.jpg',
+				];
+
+				// Function to shuffle array and ensure unique images for each destination
+				const getUniqueImages = (count: number) => {
+					const shuffled = [...imageUrls].sort(() => Math.random() - 0.5);
+					return shuffled.slice(0, count);
+				};
+
+				// Function to generate random rating between 3.5-5.0
+				const getRandomRating = () => {
+					return Math.round((Math.random() * (5.0 - 3.5) + 3.5) * 10) / 10;
+				};
+
+				// Call the API endpoint for recommendations
+				const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+				const response = await fetch(
+					`${apiBaseUrl}/recommendations?destination_name=${encodeURIComponent(
+						searchQuery
+					)}&limit=5`
+				);
+
+				if (response.ok) {
+					const data = await response.json();
+					// Get unique images for each destination (up to 5)
+					const uniqueImages = getUniqueImages(data.recommendations.length);
+
+					// Transform API response to match our Destination type
+					const transformedResults = data.recommendations.map((item: any, index: number) => ({
+						id: Math.random(), // Generate a temporary ID
+						name: item.nama_destinasi,
+						location: item.kabupaten,
+						image: uniqueImages[index], // Unique image for each destination
+						price: 'Contact for pricing',
+						rating: getRandomRating(), // Random rating between 3.5-5.0
+						description: `Explore ${item.nama_destinasi} in ${item.kabupaten}`,
+						duration: 'Full Day', // Add default duration
+						highlights: item.categories,
+						mapUrl: item.alamat,
+					}));
+
+					setSearchResults(transformedResults);
+					setShowResults(true);
+				} else {
+					console.error('Failed to fetch recommendations');
+					// Fallback to local data if API fails
+					const results = filterDestinations(searchQuery);
+					setSearchResults(results);
+					setShowResults(true);
+				}
+			} catch (error) {
+				console.error('Error fetching recommendations:', error);
+				// Fallback to local data if API fails
+				const results = filterDestinations(searchQuery);
+				setSearchResults(results);
+				setShowResults(true);
+			} finally {
+				setIsLoading(false);
+			}
+		}
+	};
+
+	const handleKeyPress = (e: React.KeyboardEvent) => {
+		if (e.key === 'Enter') {
+			handleSearch();
+		}
+	};
+
 	return (
 		<div className='bg-white text-black min-h-screen'>
 			<Header />
@@ -26,7 +113,7 @@ function App() {
 
 					{/* BOX SEARCH */}
 					<span className='relative h-20'>
-						<div className='flex items-center justify-between py-5 px-10 gap-[10rem] absolute rounded-3xl shadow-lg backdrop-blur-lg'>
+						<div className='flex items-center justify-between py-5 px-10 gap-[5rem] absolute rounded-3xl shadow-lg backdrop-blur-lg'>
 							<span className='flex items-center justify-between gap-15 w-full'>
 								{/* LOCATION */}
 								<span className='grid'>
@@ -37,13 +124,13 @@ function App() {
 								{/* DATE */}
 								<span className='grid'>
 									<p className='font-semibold text-lg'>Date</p>
-									<p className='text-xs'>Yogyakarta</p>
+									<p className='text-xs'>{new Date().toLocaleDateString('en-GB')}</p>
 								</span>
 
 								{/* PRICE */}
 								<span className='grid'>
 									<p className='font-semibold text-lg'>Price</p>
-									<p className='text-xs'>Yogyakarta</p>
+									<p className='text-xs text-nowrap'>Rp.40.000 - Rp.150.000</p>
 								</span>
 							</span>
 
@@ -62,14 +149,14 @@ function App() {
 					<div className='flex flex-col gap-4'>
 						<div className='w-60 h-[20rem] rounded-2xl overflow-hidden'>
 							<img
-								src='https://i.pinimg.com/736x/42/eb/c8/42ebc887a379f5a735fbf863b520231f.jpg'
+								src='https://images.unsplash.com/photo-1491555103944-7c647fd857e6?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
 								alt=''
 								className='w-full h-full object-cover'
 							/>
 						</div>
 						<div className='w-60 h-[20rem] rounded-2xl overflow-hidden'>
 							<img
-								src='https://i.pinimg.com/736x/42/eb/c8/42ebc887a379f5a735fbf863b520231f.jpg'
+								src='https://images.unsplash.com/photo-1448518184296-a22facb4446f?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
 								alt=''
 								className='w-full h-full object-cover'
 							/>
@@ -82,7 +169,7 @@ function App() {
 						<img src='./doted-airplane.png' alt='' className='h-20 absolute top-3 left-25' />
 						<div className='w-70 h-[30rem] rounded-2xl overflow-hidden absolute top-25'>
 							<img
-								src='https://i.pinimg.com/736x/a4/2c/a5/a42ca54e4214fce41d5804b4580b38eb.jpg'
+								src='https://images.unsplash.com/photo-1553913861-dc2ce76b856c?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
 								alt=''
 								className='w-full h-full object-cover'
 							/>
@@ -99,7 +186,7 @@ function App() {
 					<div className='relative h-[40rem] w-[25rem] bg-[#EBEBEB] rounded-3xl'>
 						<div className='h-[40rem] w-[25rem] rounded-3xl overflow-hidden absolute -left-7 top-7'>
 							<img
-								src='https://i.pinimg.com/736x/14/95/16/14951623665d09790a7ed2d4d9d887b2.jpg'
+								src='https://images.unsplash.com/photo-1518684079-3c830dcef090?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
 								alt=''
 								className='w-full h-full object-cover'
 							/>
@@ -125,8 +212,8 @@ function App() {
 					</div>
 					<div className='grid gap-10'>
 						<span className='flex items-center justify-between gap-5'>
-							<button className='bg-[#FFA03F] text-white p-2 rounded-lg cursor-pointer transition duration-300 items-center flex justify-center'>
-								<i className='bxr bx-search text-3xl'></i>
+							<button className='text-[#FFA03F] -white p-2 rounded-lg cursor-pointer transition duration-300 items-center flex justify-center shadow-sm'>
+								<i className='bxr bx-seal text-3xl'></i>
 							</button>
 							<span className='text-lg grid'>
 								<p className='font-semibold'>Best Price Guarantee</p>
@@ -153,8 +240,8 @@ function App() {
 						</span>
 
 						<span className='flex items-center justify-between gap-5'>
-							<button className='bg-[#FFA03F] text-white p-2 rounded-lg cursor-pointer transition duration-300 items-center flex justify-center'>
-								<i className='bxr bx-search text-3xl'></i>
+							<button className='text-[#FFA03F] bg-white p-2 rounded-lg cursor-pointer transition duration-300 items-center flex justify-center shadow-sm'>
+								<i className='bxr bx-location text-3xl'></i>
 							</button>
 							<span className='text-lg grid'>
 								<p className='font-semibold'>Best Price Guarantee</p>
@@ -254,7 +341,7 @@ function App() {
 					<div className='relative h-[40rem] w-[30rem] bg-[#EBEBEB] rounded-3xl'>
 						<div className='h-[40rem] w-[30rem] rounded-3xl overflow-hidden absolute -right-7 top-7'>
 							<img
-								src='https://i.pinimg.com/736x/92/24/c7/9224c73f577d398b338fd8e0ab03c91a.jpg'
+								src='https://images.unsplash.com/photo-1531141445733-14c2eb7d4c1f?q=80&w=1965&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
 								alt=''
 								className='w-full h-full object-cover'
 							/>
@@ -262,10 +349,18 @@ function App() {
 						<div className='absolute flex items-center flex-col justify-center -bottom-15 -left-5 backdrop-blur-lg px-5 py-3 rounded-2xl shadow-lg bg-[#EBEBEB]/50'>
 							<h1 className='text-lg'>How Your Experience?</h1>
 							<span className='items-center flex justify-center gap-2'>
-								<p className='cursor-pointer text-xl'>😭</p>
-								<p className='cursor-pointer text-xl'>😭</p>
-								<p className='cursor-pointer text-xl'>😭</p>
-								<p className='cursor-pointer text-xl'>😭</p>
+								<p className='cursor-pointer text-xl hover:scale-125 hover:rotate-12 transition-all duration-300 ease-in-out transform hover:shadow-lg'>
+									🥵
+								</p>
+								<p className='cursor-pointer text-xl hover:scale-125 hover:-rotate-6 transition-all duration-300 ease-in-out transform hover:shadow-lg'>
+									😭
+								</p>
+								<p className='cursor-pointer text-xl hover:scale-125 hover:rotate-6 transition-all duration-300 ease-in-out transform hover:shadow-lg'>
+									😂
+								</p>
+								<p className='cursor-pointer text-xl hover:scale-125 hover:-rotate-12 transition-all duration-300 ease-in-out transform hover:shadow-lg'>
+									🤔
+								</p>
 							</span>
 						</div>
 					</div>
@@ -359,9 +454,19 @@ function App() {
 					</p>
 					{/* INPUT */}
 					<span className='flex items-center justify-between gap-5 w-3/4'>
-						<Input className='w-full' />
-						<Button className='bg-[#FFA03F] rounded-lg cursor-pointer transition duration-300 font-semibold shadow-xl'>
-							Get Recommendation
+						<Input
+							className='w-full'
+							placeholder='Search destinations (e.g., Yogyakarta, Borobudur, diving...)'
+							value={searchQuery}
+							onChange={(e) => setSearchQuery(e.target.value)}
+							onKeyPress={handleKeyPress}
+						/>
+						<Button
+							className='bg-[#FFA03F] rounded-lg cursor-pointer transition duration-300 font-semibold shadow-xl'
+							onClick={handleSearch}
+							disabled={isLoading}
+						>
+							{isLoading ? 'Searching...' : 'Get Recommendation'}
 						</Button>
 					</span>
 				</div>
@@ -383,6 +488,10 @@ function App() {
 				{/* PESAWAT END */}
 			</section>
 			{/* END RECOMMENDATION DESTINATION */}
+
+			{/* SEARCH RESULTS */}
+			{showResults && <DestinationResults searchQuery={searchQuery} destinations={searchResults} />}
+			{/* END SEARCH RESULTS */}
 
 			<Footer />
 		</div>

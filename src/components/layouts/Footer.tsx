@@ -14,9 +14,36 @@ const Footer = () => {
 						</div>
 
 						<div className='flex items-center justify-center gap-5'>
-							<i className='bxl bx-facebook'></i>
-							<i className='bxl bx-linkedin'></i>
-							<i className='bxl bx-tweeter'></i>
+							<svg
+								xmlns='http://www.w3.org/2000/svg'
+								width={24}
+								height={24}
+								fill={'currentColor'}
+								viewBox='0 0 24 24'
+							>
+								{/* Boxicons v3.0 https://boxicons.com | License  https://docs.boxicons.com/free */}
+								<path d='M20 3H4a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h8.615v-6.96h-2.338v-2.725h2.338v-2c0-2.325 1.42-3.592 3.5-3.592q1.05-.003 2.095.107v2.42h-1.435c-1.128 0-1.348.538-1.348 1.325v1.735h2.697l-.35 2.725h-2.348V21H20a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1'></path>
+							</svg>
+							<svg
+								xmlns='http://www.w3.org/2000/svg'
+								width={24}
+								height={24}
+								fill={'currentColor'}
+								viewBox='0 0 24 24'
+							>
+								{/* Boxicons v3.0 https://boxicons.com | License  https://docs.boxicons.com/free */}
+								<path d='M20 3H4a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1M8.339 18.337H5.667v-8.59h2.672zM7.003 8.574a1.548 1.548 0 1 1 0-3.096 1.548 1.548 0 0 1 0 3.096m11.335 9.763h-2.669V14.16c0-.996-.018-2.277-1.388-2.277-1.39 0-1.601 1.086-1.601 2.207v4.248h-2.667v-8.59h2.56v1.174h.037c.355-.675 1.227-1.387 2.524-1.387 2.704 0 3.203 1.778 3.203 4.092v4.71z'></path>
+							</svg>
+							<svg
+								xmlns='http://www.w3.org/2000/svg'
+								width={24}
+								height={24}
+								fill={'currentColor'}
+								viewBox='0 0 24 24'
+							>
+								{/* Boxicons v3.0 https://boxicons.com | License  https://docs.boxicons.com/free */}
+								<path d='M13.68 10.62 20.24 3h-1.55L13 9.62 8.45 3H3.19l6.88 10.01L3.19 21h1.55l6.01-6.99 4.8 6.99h5.24l-7.13-10.38Zm-2.13 2.47-.7-1-5.54-7.93H7.7l4.47 6.4.7 1 5.82 8.32H16.3z'></path>
+							</svg>
 						</div>
 					</span>
 

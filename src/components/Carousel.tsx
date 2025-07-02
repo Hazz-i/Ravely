@@ -1,6 +1,7 @@
 const data = [
 	{
-		image: 'https://i.pinimg.com/736x/44/a4/f8/44a4f851540e5ee0d1c036add10d317f.jpg',
+		image:
+			'https://images.unsplash.com/photo-1572025600482-08238b1ed5a3?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
 		title: 'Lakshadweep',
 		price: '45,000',
 		rating: '4.0',
@@ -10,7 +11,8 @@ const data = [
 		people: '10+',
 	},
 	{
-		image: 'https://i.pinimg.com/736x/d3/f5/3a/d3f53a6d2b0c3e27cb1c3c07a8ed9218.jpg',
+		image:
+			'https://images.unsplash.com/photo-1675296098308-f9f526c6b724?q=80&w=2034&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
 		title: 'Kaziranga',
 		price: '23,000',
 		rating: '4.5',
@@ -20,7 +22,8 @@ const data = [
 		people: '13+',
 	},
 	{
-		image: 'https://i.pinimg.com/736x/c1/a3/8e/c1a38e24cba5663d75045eeafbadb4de.jpg',
+		image:
+			'https://images.unsplash.com/photo-1677211352662-30e7775c7ce8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
 		title: 'Sun temple',
 		price: '19,000',
 		rating: '4.7',
@@ -34,9 +37,9 @@ const Carousel = () => {
 	return (
 		<span className='grid'>
 			<div className='flex items-center justify-center gap-6 relative'>
-				<button className='bg-white shadow-md rounded-full p-3 text-[#FFA03F] hover:bg-orange-100 absolute left-0 top-1/2 -translate-y-1/2'>
+				{/* <button className='bg-white shadow-md rounded-full p-3 text-[#FFA03F] hover:bg-orange-100 absolute left-0 top-1/2 -translate-y-1/2'>
 					<i className='bx bx-chevron-left'></i>
-				</button>
+				</button> */}
 
 				{data.map((item, index) => (
 					<div key={index} className='bg-white rounded-3xl shadow-xl overflow-hidden w-72'>
@@ -59,22 +62,22 @@ const Carousel = () => {
 							</p>
 							<div className='flex items-center justify-between text-sm text-gray-500'>
 								<span className='flex items-center gap-1'>
-									<i className='bx bx-time text-lg'></i> {item.days} Day’s
+									<i className='bxr  bx-clock-5'></i> {item.days} Day's
 								</span>
 								<span className='flex items-center gap-1'>
 									<i className='bx bx-user text-lg'></i> {item.people}
 								</span>
 								<span className='flex items-center gap-1'>
-									<i className='bx bx-map text-lg'></i> India
+									<i className='bx bx-map text-lg'></i> Yogyakarta
 								</span>
 							</div>
 						</div>
 					</div>
 				))}
 
-				<button className='bg-white shadow-md rounded-full p-3 text-[#FFA03F] hover:bg-orange-100 absolute right-0 top-1/2 -translate-y-1/2'>
+				{/* <button className='bg-white shadow-md rounded-full p-3 text-[#FFA03F] hover:bg-orange-100 absolute right-0 top-1/2 -translate-y-1/2'>
 					<i className='bx bx-chevron-right'></i>
-				</button>
+				</button> */}
 			</div>
 
 			<div className='flex justify-center mt-6 gap-2'>
