@@ -2,7 +2,7 @@ const data = [
 	{
 		image:
 			'https://images.unsplash.com/photo-1572025600482-08238b1ed5a3?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-		title: 'Lakshadweep',
+		title: 'Pantai Parangtritis',
 		price: '45,000',
 		rating: '4.0',
 		reviews: '23',
@@ -13,7 +13,7 @@ const data = [
 	{
 		image:
 			'https://images.unsplash.com/photo-1675296098308-f9f526c6b724?q=80&w=2034&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-		title: 'Kaziranga',
+		title: 'Gembira Loka Zoo',
 		price: '23,000',
 		rating: '4.5',
 		reviews: '32',
@@ -24,7 +24,7 @@ const data = [
 	{
 		image:
 			'https://images.unsplash.com/photo-1677211352662-30e7775c7ce8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-		title: 'Sun temple',
+		title: 'Candi Prambanan',
 		price: '19,000',
 		rating: '4.7',
 		reviews: '42',

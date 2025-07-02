@@ -1,4 +1,12 @@
 {
+	"redirects": [
+		{
+			"source": "https://www.ravely.my.id/:path*",
+			"destination": "https://ravely.my.id/:path*",
+			"permanent": true
+		}
+	],
+
 	"headers": [
 		{
 			"source": "/sitemap.xml",
