@@ -1,4 +1,10 @@
 {
+	"rewrites": [
+		{
+			"source": "/(.*)",
+			"destination": "/index.html"
+		}
+	],
 	"redirects": [
 		{
 			"source": "https://www.ravely.my.id/:path*",
@@ -6,7 +12,6 @@
 			"permanent": true
 		}
 	],
-
 	"headers": [
 		{
 			"source": "/sitemap.xml",
@@ -16,6 +21,28 @@
 					"value": "application/xml"
 				}
 			]
+		},
+		{
+			"source": "/(.*)",
+			"headers": [
+				{
+					"key": "X-Content-Type-Options",
+					"value": "nosniff"
+				},
+				{
+					"key": "X-Frame-Options",
+					"value": "DENY"
+				},
+				{
+					"key": "X-XSS-Protection",
+					"value": "1; mode=block"
+				}
+			]
 		}
-	]
+	],
+	"buildCommand": "pnpm run build",
+	"outputDirectory": "dist",
+	"installCommand": "pnpm install --frozen-lockfile",
+	"devCommand": "pnpm run dev",
+	"framework": "vite"
 }
