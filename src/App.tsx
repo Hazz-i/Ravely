@@ -308,9 +308,9 @@ function App() {
 							<span className='text-lg grid'>
 								<p className='font-semibold'>Best Price Guarantee</p>
 								<small>
-									Lorem ipsum dolor sit amet consectetur, adipisicing elit. Est ipsam quo
-									exercitationem optio provident eveniet pariatur at quam iste adipisci nesciunt ab
-									dolorem dolores sapiente voluptatum tenetur, aut harum esse.
+									Kami bekerja sama dengan berbagai mitra perjalanan untuk memastikan Anda
+									mendapatkan harga paling kompetitif. Tidak perlu membandingkan manual—kami sudah
+									lakukan untuk Anda
 								</small>
 							</span>
 						</span>
@@ -320,11 +320,11 @@ function App() {
 								<i className='bxr bx-calendar-week text-3xl'></i>
 							</button>
 							<span className='text-lg grid'>
-								<p className='font-semibold'>Best Price Guarantee</p>
+								<p className='font-semibold'>Smart Trip Planning</p>
 								<small>
-									Lorem ipsum dolor sit amet consectetur, adipisicing elit. Est ipsam quo
-									exercitationem optio provident eveniet pariatur at quam iste adipisci nesciunt ab
-									dolorem dolores sapiente voluptatum tenetur, aut harum esse.
+									Ravely membantu Anda menemukan destinasi yang cocok dengan waktu liburan Anda.
+									Fitur perencanaan cerdas kami memaksimalkan setiap hari perjalanan Anda, tanpa
+									repot menyusun itinerary.
 								</small>
 							</span>
 						</span>
@@ -334,11 +334,10 @@ function App() {
 								<i className='bxr bx-location text-3xl'></i>
 							</button>
 							<span className='text-lg grid'>
-								<p className='font-semibold'>Best Price Guarantee</p>
+								<p className='font-semibold'>Personalized Destination Picks</p>
 								<small>
-									Lorem ipsum dolor sit amet consectetur, adipisicing elit. Est ipsam quo
-									exercitationem optio provident eveniet pariatur at quam iste adipisci nesciunt ab
-									dolorem dolores sapiente voluptatum tenetur, aut harum esse.
+									Setiap orang punya gaya liburan yang berbeda. Ravely memahami preferensi Anda dan
+									merekomendasikan tempat-tempat yang sesuai dengan minat, cuaca, dan anggaran Anda.
 								</small>
 							</span>
 						</span>
@@ -391,9 +390,9 @@ function App() {
 							</div>
 							<div className='flex items-start justify-center flex-col gap-5'>
 								<p className=''>
-									Lorem ipsum dolor sit amet consectetur, adipisicing elit. Est ipsam quo
-									exercitationem optio provident eveniet pariatur at quam iste adipisci nesciunt ab
-									dolorem dolores sapiente voluptatum tenetur, aut harum esse.
+									Temukan tempat wisata terbaik berdasarkan minat dan waktu Anda. Ravely membantu
+									Anda merencanakan perjalanan tanpa stres dengan rekomendasi cerdas yang
+									disesuaikan dengan preferensi pribadi, cuaca, dan anggaran.
 								</p>
 								<button className='bg-[#FFA03F] text-white px-8 py-2 rounded-lg cursor-pointer transition duration-300 font-semibold shadow-xl'>
 									About Us
@@ -486,9 +485,10 @@ function App() {
 								<h2 className='text-xl font-semibold text-black'>Max Skshena</h2>
 								<p className='text-sm text-[#FFA03F] mb-4'>Ceo Of Xyz Compny</p>
 								<p className='text-gray-700 text-base leading-relaxed'>
-									"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-									incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-									exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+									"Ravely benar-benar mengubah cara kami merencanakan perjalanan bisnis dan liburan
+									tim. Dengan rekomendasi yang akurat dan personal, kami bisa menghemat waktu dan
+									mendapatkan pengalaman destinasi yang luar biasa. Platform ini cerdas, mudah
+									digunakan, dan sangat membantu."
 								</p>
 							</div>
 						</div>
