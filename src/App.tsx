@@ -207,71 +207,25 @@ function App() {
 							<span className='flex items-center justify-between gap-15 w-full'>
 								{/* LOCATION */}
 								<span className='grid'>
-									<h1 className='text-lg font-semibold'>Location</h1>
-									<div className='relative'>
-										<input
-											ref={inputRef}
-											type='text'
-											placeholder={
-												isLoadingDestinations ? 'Loading destinations...' : 'Where are you going?'
-											}
-											className={`text-sm bg-transparent border-none outline-none w-full ${
-												isLoadingDestinations ? 'text-gray-400 cursor-not-allowed' : 'text-gray-500'
-											}`}
-											value={searchQuery}
-											onChange={handleInputChange}
-											onKeyDown={handleKeyDown}
-											disabled={isLoadingDestinations}
-										/>
-
-										{/* Loading indicator */}
-										{isLoadingDestinations && (
-											<div className='absolute right-0 top-1/2 transform -translate-y-1/2'>
-												<div className='w-4 h-4 border-2 border-[#FFA03F] border-t-transparent rounded-full animate-spin'></div>
-											</div>
-										)}
-
-										{/* Autocomplete Suggestions */}
-										{showSuggestions && suggestions.length > 0 && !isLoadingDestinations && (
-											<div className='absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-lg z-50 mt-1 max-h-60 overflow-y-auto'>
-												{suggestions.map((suggestion, index) => (
-													<div
-														key={index}
-														className={`px-4 py-3 cursor-pointer hover:bg-gray-50 border-b border-gray-100 last:border-b-0 ${
-															index === activeSuggestion
-																? 'bg-[#FFA03F]/10 text-[#FFA03F]'
-																: 'text-gray-700'
-														}`}
-														onClick={() => handleSuggestionClick(suggestion)}
-													>
-														<div className='flex items-center'>
-															<i className='bx bx-map-pin text-gray-400 mr-3'></i>
-															<span className='text-sm'>{suggestion}</span>
-														</div>
-													</div>
-												))}
-											</div>
-										)}
-									</div>
+									<p className='font-semibold text-lg'>Location</p>
+									<p className='text-xs'>Yogyakarta</p>
 								</span>
 
 								{/* DATE */}
 								<span className='grid'>
-									<h1 className='text-lg font-semibold'>Date</h1>
+									<p className='font-semibold text-lg'>Date</p>
 									<p className='text-sm text-gray-500'>{new Date().toLocaleDateString('en-GB')}</p>
+								</span>
+
+								{/* PRICE */}
+								<span className='grid'>
+									<p className='font-semibold text-lg'>Price</p>
+									<p className='text-xs text-nowrap'>Rp.40.000 - Rp.150.000</p>
 								</span>
 							</span>
 
-							<button
-								className='bg-[#FFA03F] text-white p-2 rounded-lg cursor-pointer transition duration-300 items-center flex justify-center disabled:opacity-50 disabled:cursor-not-allowed'
-								onClick={handleSearch}
-								disabled={isLoading || isLoadingDestinations}
-							>
-								{isLoading ? (
-									<div className='w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin'></div>
-								) : (
-									<i className='bx bx-search text-xl'></i>
-								)}
+							<button className='bg-[#FFA03F] text-white p-2 rounded-lg cursor-pointer transition duration-300 items-center flex justify-center disabled:opacity-50 disabled:cursor-not-allowed'>
+								<i className='bx bx-search text-xl'></i>
 							</button>
 						</div>
 					</span>
