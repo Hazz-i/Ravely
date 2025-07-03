@@ -182,12 +182,6 @@ function App() {
 		}
 	};
 
-	const handleKeyPress = (e: React.KeyboardEvent) => {
-		if (e.key === 'Enter') {
-			handleSearch();
-		}
-	};
-
 	return (
 		<div className='bg-white text-black min-h-screen'>
 			<Header />
