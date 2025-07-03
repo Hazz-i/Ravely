@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Header from './components/layouts/Header';
 import Carousel from './components/Carousel';
 import { Input } from './components/ui/input';
@@ -13,9 +13,105 @@ function App() {
 	const [showResults, setShowResults] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 
+	// New states for autocomplete
+	const [allDestinations, setAllDestinations] = useState<any[]>([]);
+	const [suggestions, setSuggestions] = useState<string[]>([]);
+	const [showSuggestions, setShowSuggestions] = useState(false);
+	const [activeSuggestion, setActiveSuggestion] = useState(-1);
+	const [isLoadingDestinations, setIsLoadingDestinations] = useState(true); // Add loading state for destinations
+	const inputRef = useRef<HTMLInputElement>(null);
+
+	// Fetch all destinations on component mount
+	useEffect(() => {
+		const fetchAllDestinations = async () => {
+			try {
+				setIsLoadingDestinations(true); // Start loading
+				const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+				const response = await fetch(`${apiBaseUrl}/destinations`);
+
+				if (response.ok) {
+					const data = await response.json();
+					setAllDestinations(data.destinations || []);
+				}
+			} catch (error) {
+				console.error('Error fetching all destinations:', error);
+			} finally {
+				setIsLoadingDestinations(false); // End loading
+			}
+		};
+
+		fetchAllDestinations();
+	}, []);
+
+	// Handle input change for autocomplete
+	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		// Don't allow input changes while destinations are loading
+		if (isLoadingDestinations) return;
+
+		const value = e.target.value;
+		setSearchQuery(value);
+
+		if (value.length > 0) {
+			const filteredSuggestions = allDestinations
+				.map((dest) => dest.title)
+				.filter((title) => title.toLowerCase().includes(value.toLowerCase()))
+				.slice(0, 5); // Limit to 5 suggestions
+
+			setSuggestions(filteredSuggestions);
+			setShowSuggestions(true);
+			setActiveSuggestion(-1);
+		} else {
+			setShowSuggestions(false);
+			setSuggestions([]);
+		}
+	};
+
+	// Handle suggestion click
+	const handleSuggestionClick = (suggestion: string) => {
+		setSearchQuery(suggestion);
+		setShowSuggestions(false);
+		setSuggestions([]);
+		setActiveSuggestion(-1);
+	};
+
+	// Handle keyboard navigation
+	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		if (e.key === 'ArrowDown') {
+			e.preventDefault();
+			setActiveSuggestion((prev) => (prev < suggestions.length - 1 ? prev + 1 : prev));
+		} else if (e.key === 'ArrowUp') {
+			e.preventDefault();
+			setActiveSuggestion((prev) => (prev > 0 ? prev - 1 : -1));
+		} else if (e.key === 'Enter') {
+			e.preventDefault();
+			if (activeSuggestion >= 0) {
+				handleSuggestionClick(suggestions[activeSuggestion]);
+			} else {
+				handleSearch();
+			}
+		} else if (e.key === 'Escape') {
+			setShowSuggestions(false);
+			setActiveSuggestion(-1);
+		}
+	};
+
+	// Close suggestions when clicking outside
+	useEffect(() => {
+		const handleClickOutside = (event: MouseEvent) => {
+			if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
+				setShowSuggestions(false);
+				setActiveSuggestion(-1);
+			}
+		};
+
+		document.addEventListener('mousedown', handleClickOutside);
+		return () => document.removeEventListener('mousedown', handleClickOutside);
+	}, []);
+
 	const handleSearch = async () => {
 		if (searchQuery.trim()) {
 			setIsLoading(true);
+			setShowSuggestions(false);
 			try {
 				// Array of image URLs from the project
 				const imageUrls = [
@@ -53,15 +149,15 @@ function App() {
 
 					// Transform API response to match our Destination type
 					const transformedResults = data.recommendations.map((item: any, index: number) => ({
-						id: Math.random(), // Generate a temporary ID
+						id: Math.random(),
 						name: item.nama_destinasi,
 						location: item.kabupaten,
-						image: uniqueImages[index], // Unique image for each destination
+						image: uniqueImages[index],
 						price: 'Contact for pricing',
-						rating: getRandomRating(), // Random rating between 3.5-5.0
+						rating: getRandomRating(),
 						description: `Explore ${item.nama_destinasi} in ${item.kabupaten}`,
-						duration: 'Full Day', // Add default duration
-						highlights: item.categories,
+						duration: 'Full Day',
+						highlights: item.categories || ['Cultural Site', 'Local Experience', 'Scenic Views'],
 						mapUrl: item.alamat,
 					}));
 
@@ -117,25 +213,71 @@ function App() {
 							<span className='flex items-center justify-between gap-15 w-full'>
 								{/* LOCATION */}
 								<span className='grid'>
-									<p className='font-semibold text-lg'>Location</p>
-									<p className='text-xs'>Yogyakarta</p>
+									<h1 className='text-lg font-semibold'>Location</h1>
+									<div className='relative'>
+										<input
+											ref={inputRef}
+											type='text'
+											placeholder={
+												isLoadingDestinations ? 'Loading destinations...' : 'Where are you going?'
+											}
+											className={`text-sm bg-transparent border-none outline-none w-full ${
+												isLoadingDestinations ? 'text-gray-400 cursor-not-allowed' : 'text-gray-500'
+											}`}
+											value={searchQuery}
+											onChange={handleInputChange}
+											onKeyDown={handleKeyDown}
+											disabled={isLoadingDestinations}
+										/>
+
+										{/* Loading indicator */}
+										{isLoadingDestinations && (
+											<div className='absolute right-0 top-1/2 transform -translate-y-1/2'>
+												<div className='w-4 h-4 border-2 border-[#FFA03F] border-t-transparent rounded-full animate-spin'></div>
+											</div>
+										)}
+
+										{/* Autocomplete Suggestions */}
+										{showSuggestions && suggestions.length > 0 && !isLoadingDestinations && (
+											<div className='absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-lg z-50 mt-1 max-h-60 overflow-y-auto'>
+												{suggestions.map((suggestion, index) => (
+													<div
+														key={index}
+														className={`px-4 py-3 cursor-pointer hover:bg-gray-50 border-b border-gray-100 last:border-b-0 ${
+															index === activeSuggestion
+																? 'bg-[#FFA03F]/10 text-[#FFA03F]'
+																: 'text-gray-700'
+														}`}
+														onClick={() => handleSuggestionClick(suggestion)}
+													>
+														<div className='flex items-center'>
+															<i className='bx bx-map-pin text-gray-400 mr-3'></i>
+															<span className='text-sm'>{suggestion}</span>
+														</div>
+													</div>
+												))}
+											</div>
+										)}
+									</div>
 								</span>
 
 								{/* DATE */}
 								<span className='grid'>
-									<p className='font-semibold text-lg'>Date</p>
-									<p className='text-xs'>{new Date().toLocaleDateString('en-GB')}</p>
-								</span>
-
-								{/* PRICE */}
-								<span className='grid'>
-									<p className='font-semibold text-lg'>Price</p>
-									<p className='text-xs text-nowrap'>Rp.40.000 - Rp.150.000</p>
+									<h1 className='text-lg font-semibold'>Date</h1>
+									<p className='text-sm text-gray-500'>{new Date().toLocaleDateString('en-GB')}</p>
 								</span>
 							</span>
 
-							<button className='bg-[#FFA03F] text-white p-2 rounded-lg cursor-pointer transition duration-300 items-center flex justify-center'>
-								<i className='bxr bx-search text-3xl'></i>
+							<button
+								className='bg-[#FFA03F] text-white p-2 rounded-lg cursor-pointer transition duration-300 items-center flex justify-center disabled:opacity-50 disabled:cursor-not-allowed'
+								onClick={handleSearch}
+								disabled={isLoading || isLoadingDestinations}
+							>
+								{isLoading ? (
+									<div className='w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin'></div>
+								) : (
+									<i className='bx bx-search text-xl'></i>
+								)}
 							</button>
 						</div>
 					</span>
@@ -453,18 +595,55 @@ function App() {
 						your preferences and let us guide you to the perfect getaway tailored just for you.
 					</p>
 					{/* INPUT */}
-					<span className='flex items-center justify-between gap-5 w-3/4'>
-						<Input
-							className='w-full'
-							placeholder='Search destinations (e.g., Yogyakarta, Borobudur, diving...)'
-							value={searchQuery}
-							onChange={(e) => setSearchQuery(e.target.value)}
-							onKeyPress={handleKeyPress}
-						/>
+					<span className='flex items-center justify-between gap-5 w-3/4 relative'>
+						<div className='relative w-full'>
+							<Input
+								ref={inputRef}
+								className={`w-full ${isLoadingDestinations ? 'cursor-not-allowed' : ''}`}
+								placeholder={
+									isLoadingDestinations
+										? 'Loading destinations...'
+										: 'Search destinations (e.g., Yogyakarta, Borobudur, diving...)'
+								}
+								value={searchQuery}
+								onChange={handleInputChange}
+								onKeyDown={handleKeyDown}
+								disabled={isLoadingDestinations}
+							/>
+
+							{/* Loading indicator for second input */}
+							{isLoadingDestinations && (
+								<div className='absolute right-3 top-1/2 transform -translate-y-1/2'>
+									<div className='w-4 h-4 border-2 border-[#FFA03F] border-t-transparent rounded-full animate-spin'></div>
+								</div>
+							)}
+
+							{/* Autocomplete Suggestions */}
+							{showSuggestions && suggestions.length > 0 && !isLoadingDestinations && (
+								<div className='absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-lg z-50 mt-1 max-h-60 overflow-y-auto'>
+									{suggestions.map((suggestion, index) => (
+										<div
+											key={index}
+											className={`px-4 py-3 cursor-pointer hover:bg-gray-50 border-b border-gray-100 last:border-b-0 ${
+												index === activeSuggestion
+													? 'bg-[#FFA03F]/10 text-[#FFA03F]'
+													: 'text-gray-700'
+											}`}
+											onClick={() => handleSuggestionClick(suggestion)}
+										>
+											<div className='flex items-center'>
+												<i className='bx bx-map-pin text-gray-400 mr-3'></i>
+												<span className='text-sm'>{suggestion}</span>
+											</div>
+										</div>
+									))}
+								</div>
+							)}
+						</div>
 						<Button
-							className='bg-[#FFA03F] rounded-lg cursor-pointer transition duration-300 font-semibold shadow-xl'
+							className='bg-[#FFA03F] rounded-lg cursor-pointer transition duration-300 font-semibold shadow-xl disabled:opacity-50 disabled:cursor-not-allowed'
 							onClick={handleSearch}
-							disabled={isLoading}
+							disabled={isLoading || isLoadingDestinations}
 						>
 							{isLoading ? 'Searching...' : 'Get Recommendation'}
 						</Button>
